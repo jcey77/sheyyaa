@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sheyya App Prem</title>
+    <style>
+        :root { 
+            --primary: #FF8C00; 
+            --secondary: #FFD700;
+            --bg: #FFF9F0; 
+            --border: #222; 
+        }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); padding: 20px; color: #333; }
+        .container { max-width: 450px; margin: auto; background: white; border: 3px solid var(--border); border-radius: 20px; padding: 25px; box-shadow: 10px 10px 0px var(--border); }
+        
+        /* Header Toko */
+        .store-name { text-align: center; font-size: 2em; font-weight: 900; color: var(--primary); text-transform: uppercase; margin-bottom: 5px; text-shadow: 2px 2px 0px var(--border); }
+        .subtitle { text-align: center; font-size: 0.85em; color: #555; margin-bottom: 25px; border-bottom: 2px dashed #ccc; padding-bottom: 15px; }
+        
+        label { font-weight: bold; font-size: 0.8em; display: block; margin-bottom: 5px; text-transform: uppercase; }
+        select, input { width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid var(--border); border-radius: 10px; box-sizing: border-box; font-size: 14px; outline: none; }
+        select:focus, input:focus { border-color: var(--primary); }
+
+        .price-box { background: #F8F8F8; border: 2px solid var(--border); border-radius: 12px; padding: 15px; text-align: center; margin-bottom: 20px; position: relative; }
+        .price-box::before { content: "💰"; position: absolute; left: 15px; top: 15px; font-size: 1.2em; }
+        .price-val { font-size: 1.8em; font-weight: 800; color: var(--primary); }
+        
+        .btn-order { width: 100%; background: var(--primary); color: white; border: 2px solid var(--border); padding: 18px; border-radius: 12px; font-weight: bold; font-size: 1.1em; cursor: pointer; transition: 0.2s; box-shadow: 0 5px 0 #804600; }
+        .btn-order:hover { background: #e67e00; }
+        .btn-order:active { transform: translateY(3px); box-shadow: 0 2px 0 #804600; }
+        
+        .footer-note { font-size: 0.75em; margin-top: 20px; line-height: 1.5; background: #FFF3E0; padding: 12px; border-radius: 10px; border: 1px solid var(--primary); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="store-name">Sheyya App Prem</div>
+    <p class="subtitle">Best Premium Apps Services & Low Price</p>
+
+    <label>📂 Pilih Kategori Aplikasi</label>
+    <select id="category" onchange="updateService()">
+        <option value="">-- Pilih Aplikasi --</option>
+    </select>
+
+    <label>🎯 Pilih Layanan / Durasi</label>
+    <select id="service" onchange="updatePrice()">
+        <option value="">-- Pilih Durasi --</option>
+    </select>
+
+    <div class="price-box">
+        <label>Total Pembayaran</label>
+        <div id="display-price" class="price-val">Rp 0</div>
+    </div>
+
+    <label>💳 Metode Pembayaran</label>
+    <select id="payment">
+        <option value="DANA">DANA</option>
+        <option value="GOPAY">GOPAY</option>
+    </select>
+
+    <label>👤 Data Pemesan</label>
+    <input type="text" id="buyer-name" placeholder="Nama Lengkap">
+    <input type="text" id="buyer-email" placeholder="Username / Email Apps">
+    <input type="number" id="buyer-phone" placeholder="Nomor WhatsApp (Aktif)">
+
+    <button class="btn-order" onclick="sendOrder()">BELI SEKARANG</button>
+
+    <div class="footer-note">
+        <b>Instruksi Pembayaran:</b><br>
+        1. Transfer sesuai nominal ke nomor: <b>0895324866749</b><br>
+        2. Klik tombol di atas untuk konfirmasi WhatsApp<br>
+        3. <b>Wajib</b> kirim bukti screenshot transfer di chat.
+    </div>
+</div>
+
+<script>
+const dataProduk = {
+    "Netflix": [
+        {name: "Netflix 1P2U", price: 23200},
+        {name: "Netflix 1P1U", price: 33200},
+        {name: "Netflix 1 Minggu", price: 14300}
+    ],
+    "Viu": [{name: "Viu Premium Lifetime", price: 2000}],
+    "Youku": [{name: "Youku Sharing 1 Bulan", price: 10340}],
+    "Prime Video": [{name: "Prime Video Private 1 Bulan", price: 8200}],
+    "Capcut": [
+        {name: "Capcut Sharing 1 Bulan Promo", price: 3700},
+        {name: "Capcut Sharing 1 Bulan", price: 4500},
+        {name: "Capcut Sharing 6 Bulan", price: 7300},
+        {name: "Capcut Sharing 12 Bulan", price: 10000},
+        {name: "Capcut Private 1 Bulan", price: 5320},
+        {name: "Capcut Private 6 Bulan", price: 17000},
+        {name: "Capcut Private 12 Bulan", price: 26500}
+    ],
+    "Canva": [
+        {name: "Canva Member 1 Bulan", price: 3000},
+        {name: "Canva Member 1 Tahun", price: 5200},
+        {name: "Canva Owner 1 Bulan", price: 6000},
+        {name: "Canva Owner 1 Tahun", price: 27400}
+    ],
+    "Bstation": [
+        {name: "Bstation Sharing 1 Bulan", price: 6000},
+        {name: "Bstation Private 1 Bulan", price: 32000}
+    ],
+    "YouTube": [{name: "YouTube Indplan 1 Bulan", price: 13300}],
+    "WeTV": [
+        {name: "WeTV Sharing 1 Bulan 8U", price: 6000},
+        {name: "WeTV Sharing 1 Bulan 5U", price: 9000},
+        {name: "WeTV Private 1 Bulan", price: 23000}
+    ],
+    "Vidio": [
+        {name: "Vidio Platinum Sharing", price: 20000},
+        {name: "Vidio Platinum Private", price: 37000}
+    ],
+    "Alight Motion": [
+        {name: "AM Private 1 Tahun", price: 2500},
+        {name: "AM Private 2 Tahun", price: 5000}
+    ],
+    "Picsart": [
+        {name: "Picsart Sharing 1 Bulan", price: 4000},
+        {name: "Picsart Private 1 Bulan", price: 7320}
+    ],
+    "Crunchyroll": [{name: "Crunchyroll Sharing 35 Hari", price: 6000}],
+    "HBO Max": [
+        {name: "HBO Max Sharing 1 Bulan", price: 17000},
+        {name: "HBO Max Standar Private 1 Bulan", price: 80000}
+    ],
+    "VSCO": [{name: "VSCO Plus Andro/iOS 1 Tahun", price: 8000}]
+};
+
+const catEl = document.getElementById('category');
+const servEl = document.getElementById('service');
+const priceEl = document.getElementById('display-price');
+
+// Load Categories
+Object.keys(dataProduk).sort().forEach(cat => {
+    let opt = new Option(cat, cat);
+    catEl.add(opt);
+});
+
+function updateService() {
+    servEl.innerHTML = '<option value="">-- Pilih Durasi --</option>';
+    if (catEl.value) {
+        dataProduk[catEl.value].forEach(item => {
+            let opt = new Option(item.name, item.price);
+            servEl.add(opt);
+        });
+    }
+    updatePrice();
+}
+
+function updatePrice() {
+    const price = servEl.value;
+    priceEl.innerText = price ? "Rp " + parseInt(price).toLocaleString('id-ID') : "Rp 0";
+}
+
+function sendOrder() {
+    const serviceName = servEl.options[servEl.selectedIndex]?.text;
+    const price = priceEl.innerText;
+    const pay = document.getElementById('payment').value;
+    const name = document.getElementById('buyer-name').value;
+    const email = document.getElementById('buyer-email').value;
+    const phone = document.getElementById('buyer-phone').value;
+
+    if (!catEl.value || !servEl.value || !name || !email || !phone) {
+        alert("Ups! Lengkapi semua data dan pilih produk dulu ya.");
+        return;
+    }
+
+    const format = `Halo Sheyya, saya mau order!
+
+Nama: ${name}
+Produk: ${serviceName}
+Username / Email: ${email}
+Nomor Telf: ${phone}
+Metode Bayar: ${pay}
+
+Pembayaran ke nomor 0895324866749
+(serta bukti pembayaran)`;
+
+    const waLink = `https://wa.me/62895324866749?text=${encodeURIComponent(format)}`;
+    window.open(waLink, '_blank');
+}
+</script>
+
+</body>
+</html>
