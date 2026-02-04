@@ -3,180 +3,217 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sheyya App Prem</title>
+    <title>Sheyya App Premium</title>
     <style>
-        :root { 
-            --primary: #FF8C00; 
-            --bg: #FFF9F0; 
-            --border: #222; 
-        }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); padding: 20px; color: #333; display: flex; justify-content: center; margin: 0; flex-direction: column; align-items: center; }
+        :root { --primary: #6C5CE7; --bg: #F0F2F5; --border: #222; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); padding: 20px; display: flex; flex-direction: column; align-items: center; margin: 0; }
         
-        #admin-panel { display: none; width: 100%; max-width: 450px; background: #fff; border: 3px solid var(--border); border-radius: 10px; padding: 15px; margin-bottom: 20px; box-shadow: 5px 5px 0px var(--border); box-sizing: border-box; }
-        .admin-header { display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 0.9em; }
-        .switch { position: relative; display: inline-block; width: 50px; height: 24px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border: 2px solid var(--border); }
-        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border: 1px solid var(--border); }
-        input:checked + .slider { background-color: #ff4d4d; }
-        input:checked + .slider:before { transform: translateX(26px); }
-
+        #admin-panel { display: none; width: 100%; max-width: 450px; background: #fff; border: 3px solid var(--border); border-radius: 10px; padding: 15px; margin-bottom: 20px; box-shadow: 5px 5px 0px var(--border); box-sizing: border-box; z-index: 100; }
         .container { width: 100%; max-width: 450px; background: white; border: 3px solid var(--border); border-radius: 20px; padding: 25px; box-shadow: 10px 10px 0px var(--border); box-sizing: border-box; position: relative; }
         
-        #tutup-overlay { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 10; border-radius: 20px; flex-direction: column; justify-content: center; align-items: center; text-align: center; font-weight: bold; color: #ff4d4d; }
+        #tutup-overlay { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 10; border-radius: 17px; flex-direction: column; justify-content: center; align-items: center; text-align: center; font-weight: bold; color: #ff4d4d; }
 
-        .store-name { text-align: center; font-size: 2.2em; font-weight: 900; color: var(--primary); text-transform: uppercase; margin-bottom: 5px; text-shadow: 2px 2px 0px var(--border); }
+        .store-name { text-align: center; font-size: 2.2em; font-weight: 900; color: var(--primary); text-transform: lowercase; margin: 0; text-shadow: 2px 2px 0px var(--border); }
         .subtitle { text-align: center; font-size: 0.85em; color: #555; margin-bottom: 25px; border-bottom: 2px dashed #ccc; padding-bottom: 15px; }
+
+        .game-nav { display: flex; gap: 10px; margin-bottom: 15px; width: 100%; max-width: 450px; }
+        .btn-game { flex: 1; background: #FFD700; border: 2px solid var(--border); padding: 8px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 0.65em; box-shadow: 3px 3px 0px var(--border); }
         
-        label { font-weight: bold; font-size: 0.8em; display: block; margin-bottom: 5px; text-transform: uppercase; }
+        .admin-section { margin-top: 10px; padding-top: 10px; border-top: 1px solid #eee; }
+        .stock-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; font-size: 0.8em; }
+
+        .switch { position: relative; display: inline-block; width: 34px; height: 18px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 20px; border: 1px solid var(--border); }
+        .slider:before { position: absolute; content: ""; height: 12px; width: 12px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #25D366; }
+        input:checked + .slider:before { transform: translateX(16px); }
+
+        label { font-weight: bold; font-size: 0.85em; display: block; margin-bottom: 5px; }
         select, input { width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid var(--border); border-radius: 10px; box-sizing: border-box; font-size: 14px; outline: none; }
         
         .price-box { background: #fdfdfd; border: 2px solid var(--border); border-radius: 12px; padding: 15px; text-align: center; margin-bottom: 20px; }
         .price-val { font-size: 1.8em; font-weight: 800; color: var(--primary); }
-        
-        .redeem-section { background: #FFFDE7; border: 2px dashed var(--primary); padding: 15px; border-radius: 12px; margin-bottom: 20px; }
+        .discount-label { color: green; font-size: 0.8em; font-weight: bold; margin-bottom: 5px; }
+        .pay-method { font-size: 0.75em; margin-top: 10px; padding-top: 10px; border-top: 1px solid #eee; display: flex; justify-content: center; align-items: center; gap: 8px; }
 
-        .btn-order { width: 100%; background: var(--primary); color: white; border: 2px solid var(--border); padding: 18px; border-radius: 12px; font-weight: bold; font-size: 1.1em; cursor: pointer; transition: 0.2s; box-shadow: 0 5px 0 #804600; }
-        .btn-order:active { transform: translateY(3px); box-shadow: 0 2px 0 #804600; }
-        
-        .admin-float { position: fixed; bottom: 20px; right: 20px; background: #25D366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 2px solid var(--border); box-shadow: 4px 4px 0px var(--border); cursor: pointer; text-decoration: none; font-size: 24px; z-index: 99; }
+        .btn-order { width: 100%; background: var(--primary); color: white; border: 2px solid var(--border); padding: 18px; border-radius: 12px; font-weight: bold; font-size: 1.1em; cursor: pointer; box-shadow: 0 5px 0 #3b2e96; }
     </style>
 </head>
 <body>
 
-<audio id="soundClick" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
-<audio id="soundSuccess" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3"></audio>
+<div class="game-nav">
+    <button class="btn-game" onclick="toggleGame('spin')">🎡 SPIN</button>
+    <button class="btn-game" onclick="toggleGame('code')">🔐 UNLOCK</button>
+    <button class="btn-game" onclick="toggleGame('box')">🎁 BOX</button>
+</div>
 
 <div id="admin-panel">
-    <div class="admin-header">
-        <span>🛠️ ADMIN APPS (sheyya)</span>
-        <div style="display:flex; align-items:center; gap:10px;">
+    <div style="display:flex; justify-content:space-between; font-weight:bold;">
+        <span>🛠️ ADMIN SHEYYA PREM</span>
+        <button onclick="document.getElementById('admin-panel').style.display='none'">X</button>
+    </div>
+    <div class="admin-section">
+        <label><input type="checkbox" id="status-toggle" onchange="toggleLayanan()"> Tutup Toko</label>
+        <hr>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span id="label-metode">DANA Aktif</span>
             <label class="switch">
-                <input type="checkbox" id="status-toggle" onchange="toggleLayanan()">
+                <input type="checkbox" id="payment-toggle" onchange="togglePayment()">
                 <span class="slider"></span>
             </label>
-            <span id="status-text" style="color:green">BUKA</span>
         </div>
-        <button onclick="logoutAdmin()" style="cursor:pointer; border:2px solid #222; background:#fff; font-weight:bold; padding:2px 10px;">LOGOUT</button>
+    </div>
+    <div class="admin-section">
+        <label>Atur Stok (Ready/Sold):</label>
+        <div id="stock-manager"></div>
     </div>
 </div>
 
 <div class="container">
-    <div id="tutup-overlay">
-        <span style="font-size: 3em;">😴</span><br>
-        LAYANAN SEDANG TUTUP<br>
-        <span style="font-size: 0.7em; color: #555;">Silakan kembali lagi nanti ya!</span>
-    </div>
+    <div id="tutup-overlay"><span style="font-size:3em;">😴</span><br>LAGI ISTIRAHAT</div>
+    <div class="store-name">sheyya app premium</div>
+    <p class="subtitle">Official App Premium</p>
 
-    <div class="store-name">Sheyya App Prem</div>
-    <p class="subtitle">Best Premium Apps Services & Low Price</p>
-
-    <label>📂 Pilih Aplikasi</label>
-    <select id="category" onchange="updateService(); playClick();">
-        <option value="">-- Pilih Aplikasi --</option>
-    </select>
-
-    <label>🎯 Pilih Durasi</label>
-    <select id="service" onchange="applyPromo(); playClick();">
-        <option value="">-- Pilih Durasi --</option>
-    </select>
+    <label>📺 Pilih Aplikasi</label>
+    <select id="category" onchange="updateService()"><option value="">-- Pilih --</option></select>
+    
+    <label>💎 Pilih Paket</label>
+    <select id="service" onchange="applyPromo()"><option value="">-- Pilih --</option></select>
 
     <div class="price-box">
-        <label>Total Pembayaran</label>
         <div id="display-price" class="price-val">Rp 0</div>
-        <div id="discount-info" style="font-size:0.8em; color:red; display:none; margin-top:5px;"></div>
+        <div id="discount-info" class="discount-label"></div>
+        <div class="pay-method">
+            💳 <span id="name-pay">DANA</span>: <b id="no-pay">0895324866749</b> 
+            <button onclick="copyPay()" style="font-size:0.7em; cursor:pointer;">SALIN</button>
+        </div>
     </div>
 
-    <label>👤 Data Akun</label>
     <input type="text" id="buyer-name" placeholder="Nama Lengkap">
-    <input type="text" id="buyer-email" placeholder="Email/Username Aplikasi">
+    <input type="text" id="redeem-code" placeholder="Kode Promo / Admin" onkeyup="applyPromo(); checkAdminPassword();">
 
-    <div class="redeem-section">
-        <label>🎁 Kode Promo</label>
-        <input type="text" id="redeem-code" placeholder="Masukkan kode promo" onkeyup="applyPromo(); checkAdminPassword();">
-    </div>
-
-    <button class="btn-order" onclick="sendOrder()">BELI SEKARANG</button>
+    <button class="btn-order" onclick="sendToWA()">ORDER SEKARANG</button>
 </div>
 
-<a href="https://wa.me/62895324866749" class="admin-float" target="_blank">💬</a>
-
 <script>
-const dataProduk = {
-    "Netflix": [{name: "*Netflix 1P2U", price: 25200}, {name: "*Netflix 1P1U", price: 36200}],
-    "Viu": [{name: "Viu Premium Lifetime", price: 2000}],
-    "Capcut": [{name: "Sharing 1 Bulan", price: 4200}],
-    "Canva": [{name: "Member 1 Bulan", price: 4000}],
-    "YouTube": [{name: "YouTube Premium 1 Bulan", price: 13300}]
+const dataPremium = {
+    "Netflix": [{name: "1p2u 26.200", price: 26200}, {name: "1p1u 35.200", price: 35200}, {name: "1 Minggu 15.600", price: 15600}],
+    "Viu": [{name: "Premium Lifetime 2.500", price: 2500}],
+    "Youku": [{name: "Sharing 1 Bulan 11.340", price: 11340}],
+    "Prime Video": [{name: "Private 1 Bulan 8.200", price: 8200}],
+    "Capcut": [
+        {name: "Sharing 1 Bulan Promo 4.300", price: 4300}, {name: "Sharing 1 Bulan 5.700", price: 5700},
+        {name: "Sharing 6 Bulan 9.300", price: 9300}, {name: "Sharing 12 Bulan 16.200", price: 16200},
+        {name: "Private 1 Bulan 8.320", price: 8320}, {name: "Private 6 Bulan 18.880", price: 18880}, {name: "Private 12 Bulan 32.500", price: 32500}
+    ],
+    "Canva": [
+        {name: "Member 1 Bulan 4.000", price: 4000}, {name: "Member 1 Tahun 6.200", price: 6200},
+        {name: "Owner 1 Bulan 14.880", price: 14880}, {name: "Owner 1 Tahun 30.400", price: 30400}
+    ],
+    "Bstation": [{name: "Sharing 1 Bulan 7.000", price: 7000}, {name: "Private 1 bln 32.000", price: 32000}],
+    "YouTube": [{name: "Indplan 1 bln 15.300", price: 15300}],
+    "WeTV": [{name: "Sharing 1 Bulan 8u 6.000", price: 6000}, {name: "Sharing 1 Bulan 5u 10.000", price: 10000}, {name: "Private 1 Bulan 23.000", price: 23000}],
+    "Vidio": [{name: "Platinum Sharing 24.000", price: 24000}, {name: "Platinum Private 37.000", price: 37000}],
+    "Alight Motion": [{name: "Private 1 Tahun 2.500", price: 2500}, {name: "Private 2 Tahun 5.000", price: 5000}],
+    "Picsart": [{name: "Sharing 1 Bulan 5.000", price: 5000}, {name: "Private 1 Bulan 8.320", price: 8320}],
+    "Crunchyroll": [{name: "Sharing 35 Hari 8.000", price: 8000}],
+    "HBO Max": [{name: "Sharing 1 Bulan 17.000", price: 17000}, {name: "Standar Private 1 Bulan 80.000", price: 80000}],
+    "VSCO": [{name: "Plus Andro iOS 1 Tahun 8.000", price: 8000}]
 };
 
-const catEl = document.getElementById('category');
-const servEl = document.getElementById('service');
-const priceEl = document.getElementById('display-price');
-const adminPanel = document.getElementById('admin-panel');
-const tutupOverlay = document.getElementById('tutup-overlay');
-const statusText = document.getElementById('status-text');
+const listPromo = { 
+    "HOKISHEY": 500, 
+    "SHEY-PREM": 1000, 
+    "ASHEYYA-OFFICIAL": 2000,
+    "ZAMI-G4NT3N6": 2000,
+    "Z4MIIII2026!!": 1000,
+    "ZAMIBERKELAS2026!": 500
+};
 
-function playClick() { document.getElementById('soundClick').play(); }
-function playSuccess() { document.getElementById('soundSuccess').play(); }
+let soldOutStatus = {};
 
-function checkAdminPassword() {
-    if (document.getElementById('redeem-code').value === "sheyya221") {
-        adminPanel.style.display = "block";
-        document.getElementById('redeem-code').value = "";
-        alert("Welcome Back, Sheyya!");
-        window.scrollTo(0,0);
-    }
+function init() {
+    const catEl = document.getElementById('category');
+    const stockEl = document.getElementById('stock-manager');
+    catEl.innerHTML = '<option value="">-- Pilih --</option>';
+    stockEl.innerHTML = '';
+    Object.keys(dataPremium).forEach(cat => {
+        if (soldOutStatus[cat] === undefined) soldOutStatus[cat] = false;
+        let opt = new Option(soldOutStatus[cat] ? cat + " (SOLD OUT)" : cat, cat);
+        if (soldOutStatus[cat]) opt.disabled = true;
+        catEl.add(opt);
+        let item = document.createElement('div');
+        item.className = 'stock-item';
+        item.innerHTML = `<span>${cat}</span><label class="switch"><input type="checkbox" ${soldOutStatus[cat] ? 'checked' : ''} onchange="setSoldOut('${cat}', this.checked)"><span class="slider"></span></label>`;
+        stockEl.appendChild(item);
+    });
 }
 
-function logoutAdmin() { adminPanel.style.display = "none"; }
-
-function toggleLayanan() {
-    const isClosed = document.getElementById('status-toggle').checked;
-    tutupOverlay.style.display = isClosed ? "flex" : "none";
-    statusText.innerText = isClosed ? "TUTUP" : "BUKA";
-    statusText.style.color = isClosed ? "red" : "green";
-}
-
-Object.keys(dataProduk).sort().forEach(cat => catEl.add(new Option(cat, cat)));
+function setSoldOut(cat, isSold) { soldOutStatus[cat] = isSold; init(); updateService(); }
 
 function updateService() {
-    servEl.innerHTML = '<option value="">-- Pilih Durasi --</option>';
-    if (catEl.value) { dataProduk[catEl.value].forEach(item => servEl.add(new Option(item.name, item.price))); }
+    const cat = document.getElementById('category').value;
+    const servEl = document.getElementById('service');
+    servEl.innerHTML = '<option value="">-- Pilih --</option>';
+    if(cat && !soldOutStatus[cat]) dataPremium[cat].forEach(i => servEl.add(new Option(i.name, i.price)));
     applyPromo();
 }
 
 function applyPromo() {
-    let price = parseInt(servEl.value) || 0;
+    let price = parseInt(document.getElementById('service').value) || 0;
     const code = document.getElementById('redeem-code').value.trim().toUpperCase();
-    const discInfo = document.getElementById('discount-info');
-    discInfo.style.display = "none";
-    
-    if (price > 0 && code.startsWith("SHEY-") && code.length >= 9) {
-        const last = code.slice(-1);
-        if (/[02468]/.test(last)) {
-            let discount = Math.round(price * 0.02);
-            price -= discount;
-            discInfo.style.display = "block";
-            discInfo.innerText = "Potongan 2%: -Rp " + discount.toLocaleString('id-ID');
-        } else {
-            discInfo.style.display = "block";
-            discInfo.innerText = "🎁 Bonus Item Aktif!";
-        }
+    const info = document.getElementById('discount-info');
+    info.innerText = "";
+    if(price >= 5000 && listPromo[code]) {
+        price -= listPromo[code];
+        info.innerText = "PROMO AKTIF: -Rp " + listPromo[code].toLocaleString();
     }
-    priceEl.innerText = "Rp " + price.toLocaleString('id-ID');
+    document.getElementById('display-price').innerText = "Rp " + price.toLocaleString('id-ID');
 }
 
-function sendOrder() {
-    const app = catEl.value;
-    const dur = servEl.options[servEl.selectedIndex]?.text;
-    if (!app || !servEl.value) { alert("Pilih aplikasi dulu!"); return; }
-    playSuccess();
-    setTimeout(() => {
-        const format = `🛒 ORDER APPS\n\nNama: ${document.getElementById('buyer-name').value}\nApp: ${app} (${dur})\nEmail: ${document.getElementById('buyer-email').value}\nTotal: ${priceEl.innerText}\n---------------------------\nAdmin: 0895324866749`;
-        window.open(`https://wa.me/62895324866749?text=${encodeURIComponent(format)}`, '_blank');
-    }, 500);
+function toggleGame(t) {
+    let p = parseInt(document.getElementById('service').value) || 0;
+    if(p < 5000) return alert("Minimal belanja 5k buat main game!");
+    
+    if(t === 'box') {
+        let h = Math.floor(Math.random() * 3) + 1;
+        let c = prompt("Pilih Kotak 1-3:");
+        if(c == h) alert("HOKI! Isinya KODE: ZAMI-G4NT3N6");
+        else alert("ZONK! Kotak " + h + " yang ada isinya. Coba lagi!");
+    } else if(t === 'spin') {
+        alert("🎡 SPIN AKTIF! Coba keberuntunganmu. Gunakan kode: Z4MIIII2026!!");
+    } else {
+        alert("🔐 UNLOCK CODE: Cari kode promo di sosmed Sheyya!");
+    }
 }
+
+function checkAdminPassword() {
+    if(document.getElementById('redeem-code').value === "sheyya221") {
+        document.getElementById('admin-panel').style.display = "block";
+        document.getElementById('redeem-code').value = "";
+    }
+}
+
+function togglePayment() {
+    const isGopay = document.getElementById('payment-toggle').checked;
+    document.getElementById('label-metode').innerText = isGopay ? "GOPAY Aktif" : "DANA Aktif";
+    document.getElementById('name-pay').innerText = isGopay ? "GOPAY" : "DANA";
+}
+
+function toggleLayanan() { document.getElementById('tutup-overlay').style.display = document.getElementById('status-toggle').checked ? "flex" : "none"; }
+function copyPay() { navigator.clipboard.writeText("0895324866749"); alert("Tersalin!"); }
+
+function sendToWA() {
+    const n = document.getElementById('buyer-name').value;
+    const c = document.getElementById('category').value;
+    const s = document.getElementById('service').options[document.getElementById('service').selectedIndex].text;
+    if(!n || !c || s.includes("--")) return alert("Lengkapi data!");
+    const text = `🛒 ORDER PREMIUM\nNama: ${n}\nAplikasi: ${c}\nPaket: ${s}\nTotal: ${document.getElementById('display-price').innerText}`;
+    window.open(`https://wa.me/62895324866749?text=${encodeURIComponent(text)}`);
+}
+
+init();
 </script>
 </body>
 </html>
